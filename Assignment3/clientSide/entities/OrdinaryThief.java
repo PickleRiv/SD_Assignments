@@ -3,57 +3,80 @@ package clientSide.entities;
 //import interfaces.*;
 import clientSide.entities.ThiefStates;
 import java.rmi.RemoteException;
-//import genclass.GenericIO;
 
-/**
- *    Chef thread.
- *
- *      It simulates the chef life cycle.
- *      Implementation of a client-server model of type 2 (server replication).
- *      Communication is based on remote calls under Java RMI.
- */
 public class OrdinaryThief extends Thread{
 
-	/**
-	 *	Chef state 
-	 */
 	private int thiefState;
 	private int thiefId;
+	private boolean needed;
+	private boolean isOver;
+	private int rooms;
+	private boolean carrying;
 	
 	
-	
-	/**
-	 * Set a new thief state
-	 * @param thiefState new state to be set
-	 */
 	public void setThiefState(int thiefState) { this.thiefState = thiefState; }	
-	
-	/**
-	 * Get the thief's state
-	 * @return thiefState
-	 */
+
 	public int getThiefState() { return thiefState; }
 	
 	public int getThiefId() { return thiefId; }
-	
-	/**
-	 * Instantiation of a thief thread
-	 * 	@param name thread name
-	 *  @param id thread id
-	 */
+
 	public OrdinaryThief(String name,int id) {
 		super(name);
-		this.thiefState = ThiefStates.CONCENTRATION_SITE;
 		this.thiefId = id;
+		this.needed = false;
+		this.rooms = 8;
+		this.carrying = false;
 	}
 	
-	/**
-	 * 	Life cycle of the chef
-	 */
 	@Override
 	public void run (){
-		System.out.println(thiefState);
+		while(rooms > 0) {
+			needed = false;
+			thiefState = ThiefStates.CONCENTRATION_SITE;
+			System.out.println(thiefState);
+			int dist = 30;
+			
+			System.out.println(thiefState);
+			if (!needed) {
+				needed = AmINeeded(needed);
+			}
+			
+			//prepareExcursion();
+			thiefState = ThiefStates.CRAWLING_INWARDS;
+			System.out.println(thiefState);
+			
+			// crawlIn()
+			if (dist > 0) {
+				System.out.println(thiefState);
+				dist -= 1;
+			}
+			thiefState = ThiefStates.AT_A_ROOM;
+			System.out.println(thiefState);
+			
+			// rollACanvas();
+			carrying = true;
+			
+			// reverseDirection();
+			thiefState = ThiefStates.CRAWLING_OUTWARDS;
+			System.out.println(thiefState);
+			
+			// crawlOut()
+			if (dist < 30) {
+				System.out.println(thiefState);
+				dist += 1;
+			}
+			
+			thiefState = ThiefStates.COLLECTION_SITE;
+			System.out.println(thiefState);
+			if (carrying) {
+				//handACanvas();
+				carrying = false;
+				rooms -= 1;
+			}
+			
+		}
+		
 	}
 	
-	
+	public boolean AmINeeded(boolean val) {return !val; }
 }

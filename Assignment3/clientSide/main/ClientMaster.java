@@ -9,7 +9,7 @@ public class ClientMaster {
 	
 		MasterThief master;
 		
-		master = new MasterThief("Master");
+		master = new MasterThief("Master",1);
 		System.out.println("Master Started");
 		master.start();
 		

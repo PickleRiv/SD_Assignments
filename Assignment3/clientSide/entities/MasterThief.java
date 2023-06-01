@@ -3,47 +3,26 @@ package clientSide.entities;
 //import interfaces.*;
 import clientSide.entities.MasterStates;
 import java.rmi.RemoteException;
-//import genclass.GenericIO;
 
-/**
- *    Chef thread.
- *
- *      It simulates the chef life cycle.
- *      Implementation of a client-server model of type 2 (server replication).
- *      Communication is based on remote calls under Java RMI.
- */
 public class MasterThief extends Thread{
 
-	/**
-	 *	Chef state 
-	 */
 	private int masterState;
+	private int roomsAvailable;
+	private int busyParties;
+	private int masterId;
 	
 	
-	
-	/**
-	 * Set a new chef state
-	 * @param chefState new state to be set
-	 */
 	public void setMasterState(int masterState) { this.masterState = masterState; }	
 	
-	/**
-	 * Get the chef's state
-	 * @return chef state
-	 */
 	public int getMasterState() { return masterState; }
 	
 	
-	
-	/**
-	 * Instantiation of a Chef thread
-	 * 	@param name thread name
-	 * 	@param kitStub reference to the kitchen interface
-	 * 	@param barStub reference to the bar interface
-	 */
-	public MasterThief(String name) {
+	public MasterThief(String name,int id) {
 		super(name);
+		this.masterId = id;
 		this.masterState = MasterStates.PLANNING_THE_HEIST;
+		this.roomsAvailable = 8;
+		this.busyParties = 0;
 	}
 	
 	
@@ -53,6 +32,23 @@ public class MasterThief extends Thread{
 	 */
 	@Override
 	public void run (){
+		System.out.println(masterState);
+		while(roomsAvailable != 0 && busyParties >= 0) {
+			masterState = MasterStates.DECIDING_WHAT_TO_DO;
+			System.out.println(masterState);
+			if (roomsAvailable > 0 && busyParties<2) {
+				masterState = MasterStates.ASSEMBLING_A_GROUP;
+				System.out.println(masterState);
+				roomsAvailable -= 1;
+				busyParties += 1;
+			}
+			if (busyParties == 2 || (roomsAvailable ==0 && busyParties > 0)) {
+				masterState = MasterStates.WAITING_FOR_ARRIVAL;
+				System.out.println(masterState);
+				busyParties -= 1;
+			}
+		}
+		masterState = MasterStates.PRESENTING_THE_REPORT;
 		System.out.println(masterState);
 	}
 	

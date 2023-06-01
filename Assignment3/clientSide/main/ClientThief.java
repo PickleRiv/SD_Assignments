@@ -14,9 +14,6 @@ public class ClientThief {
 		for (int i = 0; i < 6; i++) {
 			thief[i] = new OrdinaryThief("Thief_" + (i + 1), i);
 			System.out.println("Thief_" + i + "Created");
-		}
-		
-		for (int i = 0; i < 6; i++) {
 			thief[i].start();
 			System.out.println("Thief_" + i + " Started");
 		}
