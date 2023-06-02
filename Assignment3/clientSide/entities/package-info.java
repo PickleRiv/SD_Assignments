@@ -1,1 +1,1 @@
-package clientSide.entities;
+package entities;
