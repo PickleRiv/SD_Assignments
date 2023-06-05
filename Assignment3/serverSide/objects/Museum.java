@@ -9,9 +9,9 @@ public class Museum implements MuseumInterface {
 
     private Thread[] Thief;
 
-    private thievesStates[] thieves_states;
+    private thievesStates[] thievesStates;
 
-    private masterStates master_state;
+    private masterStates masterState;
 	
     
     /**
@@ -25,13 +25,13 @@ public class Museum implements MuseumInterface {
      */
     public Museum(GeneralReposInterface gp) throws RemoteException {
         Master = null;
-        master_state = null;
+        masterState = null;
         Thief = new Thread[7-1];			 // parametro M 7
-        thiefState = new thievesStates[7-1]; // parametro M
+        thiefStates = new thievesStates[7-1]; // parametro M
         
         for(int i=0, i< 7-1, i++) {
         	Thief[i] = null;
-        	thieves_states[i] = null;
+        	thievesStates[i] = null;
         }
         
         this.nEntitiesShut = 0;
@@ -40,16 +40,29 @@ public class Museum implements MuseumInterface {
         	rooms[i]
         }
     }
-    public synchronized ReturnBoolean rollACanvas(int thiefId) throws RemoteException {
+    public synchronized ReturnBool rollACanvas(int thiefId) throws RemoteException {
     	Thief[thiefId] = Thread.currentThread();
-    	
-    	return new ReturnBoolean true;  
+    	 thievesStates[thiefId] = OrdinaryThievesStates.AT_A_ROOM;
+    	return new ReturnBool ();  
+    }
+    
+    public synchronized void endOperation ()
+    {
+        while (nEntities == 0)
+        { /* the master thief waits for the termination of the ordinary thieves */
+            try
+            { wait ();
+            }
+            catch (InterruptedException ignored) {}
+        }
+        if (Master != null)
+        	Master.interrupt ();
     }
     
     public synchronized void shutdown ()
     {
         nEntities += 1;
-        if (nEntities >= Simul_Par.M)
+        if (nEntities >= SimulPar.M)
             ServerMuseum.shutdown();
         notifyAll ();                                        // the master thief may now terminate
     }

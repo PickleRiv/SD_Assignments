@@ -1,30 +1,29 @@
 package serverSide.main;
 
-import genclass.GenericIO;
-import interfaces.AssaultPartyInterface;
 import interfaces.GeneralReposInterface;
+import interfaces.MuseumInterface;
 import interfaces.Register;
-import serverSide.objects.AssaultParty;
+import serverSide.objects.Museum;
 
-import java.rmi.AlreadyBoundException;
-import java.rmi.NoSuchObjectException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
+import java.rmi.registry.*;
+import java.rmi.*;
+import java.rmi.server.*;
+
+
 
 /**
- *    Instantiation and registering of an Assault Party object.
+ *    Instantiation and registering of a Museum object.
  *
  *    Implementation of a client-server model of type 2 (server replication).
  *    Communication is based on Java RMI.
  */
-public class ServerAssaultParty {
+
+public class serverHeistMuseum
+{
     /**
      *  Flag signaling the end of operations.
      */
-
+		
     private static boolean end = false;
 
     /**
@@ -35,43 +34,36 @@ public class ServerAssaultParty {
      *        args[2] - port number where the registering service is listening to service requests
      */
 
-    public static void main (String[] args)
-    {
-        int ap_id = -1;
+    public static void main (String[] args) throws RemoteException {
         int portNumb = -1;                                             // port number for listening to service requests
         String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
 
         if (args.length != 3)
-        { GenericIO.writelnString ("Wrong number of parameters!");
+        {  System.out.println ("Wrong number of parameters!");
             System.exit (1);
         }
         try
         { portNumb = Integer.parseInt (args[0]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[0] is not a number!");
+        {  System.out.println("args[0] is not a number!");
             System.exit (1);
         }
         if ((portNumb < 4000) || (portNumb >= 65536))
-        { GenericIO.writelnString ("args[0] is not a valid port number!");
+        {  System.out.println ("args[0] is not a valid port number!");
             System.exit (1);
-        }
-        if(portNumb == 22010){
-            ap_id = 0;
-        }else{
-            ap_id = 1;
         }
         rmiRegHostName = args[1];
         try
         { rmiRegPortNumb = Integer.parseInt (args[2]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[2] is not a number!");
+        {  System.out.println ("args[2] is not a number!");
             System.exit (1);
         }
         if ((rmiRegPortNumb < 4000) || (rmiRegPortNumb >= 65536))
-        { GenericIO.writelnString ("args[2] is not a valid port number!");
+        {  System.out.println ("args[2] is not a valid port number!");
             System.exit (1);
         }
 
@@ -79,7 +71,7 @@ public class ServerAssaultParty {
 
         if (System.getSecurityManager () == null)
             System.setSecurityManager (new SecurityManager ());
-        GenericIO.writelnString ("Security manager was installed!");
+        System.out.println("Security manager was installed!");
 
         /* get a remote reference to the general repository object */
 
@@ -91,54 +83,46 @@ public class ServerAssaultParty {
         { registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RMI registry creation exception: " + e.getMessage ());
+        { System.out.println ("RMI registry creation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("RMI registry was created!");
+        System.out.println ("RMI registry was created!");
 
         try
         { reposStub = (GeneralReposInterface) registry.lookup (nameEntryGeneralRepos);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("GeneralRepos lookup exception: " + e.getMessage ());
+        {  System.out.println("GeneralRepos lookup exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("GeneralRepos not bound exception: " + e.getMessage ());
+        {  System.out.println ("GeneralRepos not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
+        /* instantiate a barber shop object */
 
-        /* instantiate an assault party object */
-
-        GenericIO.writelnInt(ap_id);
-        AssaultParty AP = new AssaultParty(ap_id, reposStub);                 // barber shop object
-        AssaultPartyInterface APStub = null;                          // remote reference to the barber shop object
+        Museum m = new Museum(reposStub);                 // Museum object
+        MuseumInterface MStub = null;                          // remote reference to the Museum object
 
         try
-        { APStub = (AssaultPartyInterface) UnicastRemoteObject.exportObject (AP, portNumb);
+        { MStub = (MuseumInterface) UnicastRemoteObject.exportObject (m, portNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("Assault party " + ap_id + " stub generation exception: " + e.getMessage ());
+        {  System.out.println ("Museum stub generation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Stub was generated!");
+        System.out.println("Stub was generated!");
 
         /* register it with the general registry service */
 
         String nameEntryBase = "RegisterHandler";                      // public name of the object that enables the registration
-        String nameEntryObject = "";                         // public name of the Assault party object
         // of other remote objects
-        if(ap_id == 0){
-            nameEntryObject = "AssaultParty0";
-        }else{
-            nameEntryObject = "AssaultParty1";
-        }
-
+        String nameEntryObject = "Museum";                         // public name of the Museum object
         Register reg = null;                                           // remote reference to the object that enables the registration
         // of other remote objects
 
@@ -146,81 +130,81 @@ public class ServerAssaultParty {
         { reg = (Register) registry.lookup (nameEntryBase);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RegisterRemoteObject lookup exception: " + e.getMessage ());
+        {  System.out.println ("RegisterRemoteObject lookup exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+        {  System.out.println ("RegisterRemoteObject not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         try
-        { reg.bind (nameEntryObject, APStub);
+        { reg.bind (nameEntryObject, MStub);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("Assault party " + ap_id + " registration exception: " + e.getMessage ());
+        {  System.out.println ("Museum registration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (AlreadyBoundException e)
-        { GenericIO.writelnString ("Assault party already bound exception: " + e.getMessage ());
+        {  System.out.println ("Museum already bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Assault party object was registered!");
+        System.out.println ("Museum object was registered!");
 
         /* wait for the end of operations */
 
-        GenericIO.writelnString ("Assault party is in operation!");
+        System.out.println ("Museum is in operation!");
         try
         { while (!end)
-            synchronized (Class.forName ("serverSide.main.ServerAssaultParty"))
+            synchronized (Class.forName ("serverSide.main.ServerMuseum"))
             { try
-            { (Class.forName ("serverSide.main.ServerAssaultParty")).wait ();
+            { (Class.forName ("serverSide.main.ServerMuseum")).wait ();
             }
             catch (InterruptedException e)
-            { GenericIO.writelnString ("Assault party main thread was interrupted!");
+            {  System.out.println ("Museum main thread was interrupted!");
             }
             }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerAssaultParty was not found (blocking)!");
+        { System.out.println ("The data type ServerMuseum was not found (blocking)!");
             e.printStackTrace ();
             System.exit (1);
         }
 
         /* server shutdown */
 
-        boolean shutdownDone = false;                                  // flag signalling the shutdown of the barber shop service
+        boolean shutdownDone = false;                                  // flag signalling the shutdown of the Museum service
 
         try
         { reg.unbind (nameEntryObject);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("Assault party deregistration exception: " + e.getMessage ());
+        {  System.out.println ("ServerMuseum deregistration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("Assault party not bound exception: " + e.getMessage ());
+        {  System.out.println("ServerMuseum not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Assault party was deregistered!");
+        System.out.println ("ServerMuseum was deregistered!");
 
         try
-        { shutdownDone = UnicastRemoteObject.unexportObject (AP, true);
+        { shutdownDone = UnicastRemoteObject.unexportObject (m, true);
         }
         catch (NoSuchObjectException e)
-        { GenericIO.writelnString ("Assault party unexport exception: " + e.getMessage ());
+        { System.out.println("Museum unexport exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         if (shutdownDone)
-            GenericIO.writelnString ("Assault party was shutdown!");
+        	 System.out.println ("Museum was shutdown!");
     }
 
     /**
@@ -231,12 +215,12 @@ public class ServerAssaultParty {
     {
         end = true;
         try
-        { synchronized (Class.forName ("serverSide.main.ServerAssaultParty"))
-        { (Class.forName ("serverSide.main.ServerAssaultParty")).notify ();
+        { synchronized (Class.forName ("serverSide.main.ServerMuseum"))
+        { (Class.forName ("serverSide.main.ServerMuseum")).notify ();
         }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerAssaultParty was not found (waking up)!");
+        {  System.out.println ("The data type ServerMuseum was not found (waking up)!");
             e.printStackTrace ();
             System.exit (1);
         }

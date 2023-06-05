@@ -14,7 +14,7 @@ import genclass.GenericIO;
  *    Communication is based on Java RMI.
  */
 
-public class ServerHeistGeneralRepos
+public class serverHeistGeneralRepos
 {
     /**
      *  Flag signaling the end of operations.
@@ -37,18 +37,18 @@ public class ServerHeistGeneralRepos
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
 
         if (args.length != 3)
-        { GenericIO.writelnString ("Wrong number of parameters!");
+        {  System.out.println("Wrong number of parameters!");
             System.exit (1);
         }
         try
         { portNumb = Integer.parseInt (args[0]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[0] is not a number!");
+        { System.out.println("args[0] is not a number!");
             System.exit (1);
         }
         if ((portNumb < 4000) || (portNumb >= 65536))
-        { GenericIO.writelnString ("args[0] is not a valid port number!");
+        {  System.out.println ("args[0] is not a valid port number!");
             System.exit (1);
         }
         rmiRegHostName = args[1];
@@ -56,11 +56,11 @@ public class ServerHeistGeneralRepos
         { rmiRegPortNumb = Integer.parseInt (args[2]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[2] is not a number!");
+        {  System.out.println ("args[2] is not a number!");
             System.exit (1);
         }
         if ((rmiRegPortNumb < 4000) || (rmiRegPortNumb >= 65536))
-        { GenericIO.writelnString ("args[2] is not a valid port number!");
+        {  System.out.println("args[2] is not a valid port number!");
             System.exit (1);
         }
 
@@ -68,7 +68,7 @@ public class ServerHeistGeneralRepos
 
         if (System.getSecurityManager () == null)
             System.setSecurityManager (new SecurityManager ());
-        GenericIO.writelnString ("Security manager was installed!");
+        System.out.println("Security manager was installed!");
 
         /* instantiate a general repository object */
 
@@ -79,11 +79,11 @@ public class ServerHeistGeneralRepos
         { reposStub = (GeneralReposInterface) UnicastRemoteObject.exportObject (repos, portNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("General Repository stub generation exception: " + e.getMessage ());
+        {  System.out.println("General Repository stub generation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Stub was generated!");
+        System.out.println("Stub was generated!");
 
         /* register it with the general registry service */
 
@@ -98,22 +98,22 @@ public class ServerHeistGeneralRepos
         { registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RMI registry creation exception: " + e.getMessage ());
+        { System.out.println("RMI registry creation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("RMI registry was created!");
+        System.out.println("RMI registry was created!");
 
         try
         { reg = (Register) registry.lookup (nameEntryBase);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RegisterRemoteObject lookup exception: " + e.getMessage ());
+        {  System.out.println ("RegisterRemoteObject lookup exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+        {  System.out.println ("RegisterRemoteObject not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
@@ -122,20 +122,20 @@ public class ServerHeistGeneralRepos
         { reg.bind (nameEntryObject, reposStub);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("General Repository registration exception: " + e.getMessage ());
+        {  System.out.println ("General Repository registration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (AlreadyBoundException e)
-        { GenericIO.writelnString ("General Repository already bound exception: " + e.getMessage ());
+        {  System.out.println ("General Repository already bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("General Repository object was registered!");
+        System.out.println ("General Repository object was registered!");
 
         /* wait for the end of operations */
 
-        GenericIO.writelnString ("General Repository is in operation!");
+        System.out.println ("General Repository is in operation!");
         try
         { while (!end)
             synchronized (Class.forName ("serverSide.main.ServerGeneralRepo"))
@@ -143,12 +143,12 @@ public class ServerHeistGeneralRepos
             { (Class.forName ("serverSide.main.ServerGeneralRepo")).wait ();
             }
             catch (InterruptedException e)
-            { GenericIO.writelnString ("General Repository main thread was interrupted!");
+            {  System.out.println ("General Repository main thread was interrupted!");
             }
             }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerGeneralRepo was not found (blocking)!");
+        {  System.out.println ("The data type ServerGeneralRepo was not found (blocking)!");
             e.printStackTrace ();
             System.exit (1);
         }
@@ -161,28 +161,28 @@ public class ServerHeistGeneralRepos
         { reg.unbind (nameEntryObject);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("General Repository deregistration exception: " + e.getMessage ());
+        {  System.out.println ("General Repository deregistration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("General Repository not bound exception: " + e.getMessage ());
+        {  System.out.println ("General Repository not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("General Repository was deregistered!");
+        System.out.println ("General Repository was deregistered!");
 
         try
         { shutdownDone = UnicastRemoteObject.unexportObject (repos, true);
         }
         catch (NoSuchObjectException e)
-        { GenericIO.writelnString ("General Repository unexport exception: " + e.getMessage ());
+        {  System.out.println("General Repository unexport exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         if (shutdownDone)
-            GenericIO.writelnString ("General Repository was shutdown!");
+        	 System.out.println ("General Repository was shutdown!");
     }
 
     /**
@@ -198,7 +198,7 @@ public class ServerHeistGeneralRepos
         }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerGeneralRepo was not found (waking up)!");
+        {  System.out.println("The data type ServerGeneralRepo was not found (waking up)!");
             e.printStackTrace ();
             System.exit (1);
         }

@@ -15,20 +15,20 @@ public class ConSite implements ConSiteInterface{
 
     private Thread[] Thief;
 
-    private thievesStates[] thieves_states;
+    private thievesStates[] thievesStates;
 
-    private masterStates master_state;
+    private masterStates masterState;
 	
     public CCsite()
     {
     	 Master = null;
-    	 master_state = null;
+    	 masterState = null;
     	 Thief = new Thread[7-1];			 // parametro M 7
-         thiefState = new thievesStates[7-1]; // parametro M
+         thiefStates = new thievesStates[7-1]; // parametro M
          
          for(int i=0, i< 7-1, i++) {
          	Thief[i] = null;
-         	thieves_states[i] = null;
+         	thievesStates[i] = null;
          }
          
          this.nEntitiesShut = 0;
@@ -48,13 +48,21 @@ public class ConSite implements ConSiteInterface{
             catch (InterruptedException ignored) {}
         }
         if ( != null)
-            MT.interrupt ();
+            Master.interrupt ();
+    }
+    
+    public synchronized ReturnInt amINeeded(int ot_id){
+    	   return new ReturnInt(0, OrdinaryThievesStates.CONCENTRATION_SITE);
+    }
+    
+    public synchronized void prepareAssaultParty(){
+    	
     }
 	
 	 public synchronized void shutdown ()
 	    {
 	        nEntities += 1;
-	        if (nEntities >= Simul_Par.M)
+	        if (nEntities >= SimulPar.M)
 	            ServerMasterThiefCCS.shutdown();
 	        notifyAll ();                                        // the master thief may now terminate
 	    }

@@ -1,30 +1,25 @@
 package serverSide.main;
 
-import genclass.GenericIO;
-import interfaces.GeneralReposInterface;
-import interfaces.MuseumInterface;
-import interfaces.Register;
-import serverSide.objects.Museum;
-
 import java.rmi.registry.*;
 import java.rmi.*;
 import java.rmi.server.*;
-
-
+import serverSide.objects.*;
+import interfaces.*;
+import genclass.GenericIO;
 
 /**
- *    Instantiation and registering of a Museum object.
+ *    Instantiation and registering of a Concentration Site object.
  *
  *    Implementation of a client-server model of type 2 (server replication).
  *    Communication is based on Java RMI.
  */
 
-public class ServerHeist_Museum
+public class serverHeistConSite
 {
     /**
      *  Flag signaling the end of operations.
      */
-		
+
     private static boolean end = false;
 
     /**
@@ -35,24 +30,25 @@ public class ServerHeist_Museum
      *        args[2] - port number where the registering service is listening to service requests
      */
 
-    public static void main (String[] args) throws RemoteException {
+    public static void main (String[] args)
+    {
         int portNumb = -1;                                             // port number for listening to service requests
         String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
 
         if (args.length != 3)
-        { GenericIO.writelnString ("Wrong number of parameters!");
+        { System.out.println ("Wrong number of parameters!");
             System.exit (1);
         }
         try
         { portNumb = Integer.parseInt (args[0]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[0] is not a number!");
+        { System.out.println ("args[0] is not a number!");
             System.exit (1);
         }
         if ((portNumb < 4000) || (portNumb >= 65536))
-        { GenericIO.writelnString ("args[0] is not a valid port number!");
+        { System.out.println ("args[0] is not a valid port number!");
             System.exit (1);
         }
         rmiRegHostName = args[1];
@@ -60,11 +56,11 @@ public class ServerHeist_Museum
         { rmiRegPortNumb = Integer.parseInt (args[2]);
         }
         catch (NumberFormatException e)
-        { GenericIO.writelnString ("args[2] is not a number!");
+        { System.out.println("args[2] is not a number!");
             System.exit (1);
         }
         if ((rmiRegPortNumb < 4000) || (rmiRegPortNumb >= 65536))
-        { GenericIO.writelnString ("args[2] is not a valid port number!");
+        { System.out.println("args[2] is not a valid port number!");
             System.exit (1);
         }
 
@@ -72,7 +68,7 @@ public class ServerHeist_Museum
 
         if (System.getSecurityManager () == null)
             System.setSecurityManager (new SecurityManager ());
-        GenericIO.writelnString ("Security manager was installed!");
+        System.out.println("Security manager was installed!");
 
         /* get a remote reference to the general repository object */
 
@@ -84,46 +80,46 @@ public class ServerHeist_Museum
         { registry = LocateRegistry.getRegistry (rmiRegHostName, rmiRegPortNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RMI registry creation exception: " + e.getMessage ());
+        { System.out.println ("RMI registry creation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("RMI registry was created!");
+        System.out.println ("RMI registry was created!");
 
         try
         { reposStub = (GeneralReposInterface) registry.lookup (nameEntryGeneralRepos);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("GeneralRepos lookup exception: " + e.getMessage ());
+        { System.out.println("GeneralRepos lookup exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("GeneralRepos not bound exception: " + e.getMessage ());
+        { System.out.println ("GeneralRepos not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         /* instantiate a barber shop object */
 
-        Museum m = new Museum(reposStub);                 // Museum object
-        MuseumInterface MStub = null;                          // remote reference to the Museum object
+        ccSite concentrationSite = new OrdinaryThievesCS(reposStub);                 // Concentration site object
+        ConSiteInterface CSstub = null;                          // remote reference to the Concentration site object
 
         try
-        { MStub = (MuseumInterface) UnicastRemoteObject.exportObject (m, portNumb);
+        { CSstub = (ConcentrationSiteInterface) UnicastRemoteObject.exportObject (concentrationSite, portNumb);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("Museum stub generation exception: " + e.getMessage ());
+        { System.out.println ("Master thief control and collection site stub generation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Stub was generated!");
+        System.out.println("Stub was generated!");
 
         /* register it with the general registry service */
 
         String nameEntryBase = "RegisterHandler";                      // public name of the object that enables the registration
         // of other remote objects
-        String nameEntryObject = "Museum";                         // public name of the Museum object
+        String nameEntryObject = "ConcentrationSite";                         // public name of the CS object
         Register reg = null;                                           // remote reference to the object that enables the registration
         // of other remote objects
 
@@ -131,81 +127,81 @@ public class ServerHeist_Museum
         { reg = (Register) registry.lookup (nameEntryBase);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("RegisterRemoteObject lookup exception: " + e.getMessage ());
+        {System.out.println ("RegisterRemoteObject lookup exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("RegisterRemoteObject not bound exception: " + e.getMessage ());
+        {System.out.println("RegisterRemoteObject not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         try
-        { reg.bind (nameEntryObject, MStub);
+        { reg.bind (nameEntryObject, CSstub);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("Museum registration exception: " + e.getMessage ());
+        { System.out.println ("ConSite registration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (AlreadyBoundException e)
-        { GenericIO.writelnString ("Museum already bound exception: " + e.getMessage ());
+        {System.out.println("ConSite already bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("Museum object was registered!");
+        System.out.println("ConSite object was registered!");
 
         /* wait for the end of operations */
 
-        GenericIO.writelnString ("Museum is in operation!");
+        System.out.println ("ConSite is in operation!");
         try
         { while (!end)
-            synchronized (Class.forName ("serverSide.main.ServerMuseum"))
+            synchronized (Class.forName ("serverSide.main.ServerOrdinaryThievesCS"))
             { try
-            { (Class.forName ("serverSide.main.ServerMuseum")).wait ();
+            { (Class.forName ("serverSide.main.ServerOrdinaryThievesCS")).wait ();
             }
             catch (InterruptedException e)
-            { GenericIO.writelnString ("Museum main thread was interrupted!");
+            { System.out.println ("ConSite main thread was interrupted!");
             }
             }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerMuseum was not found (blocking)!");
+        { System.out.println ("The data type ServerCCsite was not found (blocking)!");
             e.printStackTrace ();
             System.exit (1);
         }
 
         /* server shutdown */
 
-        boolean shutdownDone = false;                                  // flag signalling the shutdown of the Museum service
+        boolean shutdownDone = false;                                  // flag signalling the shutdown of the CS service
 
         try
         { reg.unbind (nameEntryObject);
         }
         catch (RemoteException e)
-        { GenericIO.writelnString ("ServerMuseum deregistration exception: " + e.getMessage ());
+        {System.out.println("CS deregistration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { GenericIO.writelnString ("ServerMuseum not bound exception: " + e.getMessage ());
+        {System.out.println ("CS not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        GenericIO.writelnString ("ServerMuseum was deregistered!");
+        System.out.println("CS was deregistered!");
 
         try
-        { shutdownDone = UnicastRemoteObject.unexportObject (m, true);
+        { shutdownDone = UnicastRemoteObject.unexportObject (concentrationSite, true);
         }
         catch (NoSuchObjectException e)
-        { GenericIO.writelnString ("Museum unexport exception: " + e.getMessage ());
+        { System.out.println ("CS unexport exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         if (shutdownDone)
-            GenericIO.writelnString ("Museum was shutdown!");
+        	 System.out.println ("Concentration Site was shutdown!");
     }
 
     /**
@@ -216,12 +212,12 @@ public class ServerHeist_Museum
     {
         end = true;
         try
-        { synchronized (Class.forName ("serverSide.main.ServerMuseum"))
-        { (Class.forName ("serverSide.main.ServerMuseum")).notify ();
+        { synchronized (Class.forName ("serverSide.main.ServerOrdinaryThievesCS"))
+        { (Class.forName ("serverSide.main.ServerOrdinaryThievesCS")).notify ();
         }
         }
         catch (ClassNotFoundException e)
-        { GenericIO.writelnString ("The data type ServerMuseum was not found (waking up)!");
+        {  System.out.println("The data type ServerOrdinaryThievesCS was not found (waking up)!");
             e.printStackTrace ();
             System.exit (1);
         }
