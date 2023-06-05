@@ -12,6 +12,10 @@ public class OrdinaryThief extends Thread{
 	private boolean isOver;
 	private int rooms;
 	private boolean carrying;
+	//private final CollectionSiteInterface ccSiteIntf;
+	//private final ConcentrationSiteInterface conSiteIntf;
+	//private final MuseumInterface museumIntf;
+	//private final AssaultPartyInterface apIntf;
 	
 	
 	public void setThiefState(int thiefState) { this.thiefState = thiefState; }	
