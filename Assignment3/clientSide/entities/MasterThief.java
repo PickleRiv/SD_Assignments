@@ -10,8 +10,8 @@ public class MasterThief extends Thread{
 	private int roomsAvailable;
 	private int busyParties;
 	private int masterId;
-	//private final ccSiteInterface ccSiteIntf;
-	//private final conSiteInterface conSiteIntf;
+	//private final CollectionSiteInterface ccSiteIntf;
+	//private final ConcentrationSiteInterface conSiteIntf;
 	
 	
 	public void setMasterState(int masterState) { this.masterState = masterState; }	

@@ -1,10 +1,10 @@
-package main;
+package serverSide.main;
 
 /**
  * Definition of simulation parameters
  */
 
-public class SimulationParameters {
+public class SimulPar {
     /**
      * Number of Rooms
      */
@@ -37,5 +37,5 @@ public class SimulationParameters {
     public static final int minDisp = 2;
     public static final int maxDisp = 6;
  
-    private SimulationParameters () {}
+    private SimulPar () {}
 }
