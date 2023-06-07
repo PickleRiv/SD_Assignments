@@ -18,14 +18,14 @@ cp serverSide/main/ServerRegisterRemoteObject.class dirRegistry/serverSide/main
 cp serverSide/objects/RegisterRemoteObject.class dirRegistry/serverSide/objects
 cp interfaces/Register.class dirRegistry/interfaces
 
-echo "General Repository of Information"
-rm -rf dirGeneralRepos/serverSide dirGeneralRepos/clientSide dirGeneralRepos/interfaces dirGeneralRepos/commInfra
-mkdir -p dirGeneralRepos/serverSide dirGeneralRepos/serverSide/main dirGeneralRepos/serverSide/objects dirGeneralRepos/interfaces dirGeneralRepos/clientSide dirGeneralRepos/clientSide/entities dirGeneralRepos/commInfra
-cp serverSide/main/SimulPar.class serverSide/main/ServerGeneralRepos.class dirGeneralRepos/serverSide/main
-cp serverSide/objects/GeneralRepo.class dirGeneralRepos/serverSide/objects
-cp interfaces/Register.class interfaces/GeneralReposInterface.class dirGeneralRepos/interfaces
-cp clientSide/entities/MasterStates.class clientSide/entities/ThiefStates.class dirGeneralRepos/clientSide/entities
-cp commInfra/*.class dirGeneralRepos/commInfra
+#echo "General Repository of Information"
+#m -rf dirGeneralRepos/serverSide dirGeneralRepos/clientSide dirGeneralRepos/interfaces dirGeneralRepos/commInfra
+#mkdir -p dirGeneralRepos/serverSide dirGeneralRepos/serverSide/main dirGeneralRepos/serverSide/objects dirGeneralRepos/interfaces dirGeneralRepos/clientSide dirGeneralRepos/clientSide/entities dirGeneralRepos/commInfra
+#cp serverSide/main/SimulPar.class serverSide/main/ServerGeneralRepos.class dirGeneralRepos/serverSide/main
+#cp serverSide/objects/GeneralRepo.class dirGeneralRepos/serverSide/objects
+#cp interfaces/Register.class interfaces/GeneralReposInterface.class dirGeneralRepos/interfaces
+#cp clientSide/entities/MasterStates.class clientSide/entities/ThiefStates.class dirGeneralRepos/clientSide/entities
+#cp commInfra/*.class dirGeneralRepos/commInfra
 
 echo "Concentration Site"
 rm -rf dirConSite/serverSide dirConSite/clientSide dirConSite/interfaces dirConSite/commInfra
@@ -99,9 +99,9 @@ echo "Register Remote Objects"
 rm -f  dirRegistry.zip
 zip -rq dirRegistry.zip dirRegistry
 
-echo "General Repository of Information"
-rm -f  dirGeneralRepos.zip
-zip -rq dirGeneralRepos.zip dirGeneralRepos
+#echo "General Repository of Information"
+#rm -f  dirGeneralRepos.zip
+#zip -rq dirGeneralRepos.zip dirGeneralRepos
 
 echo "Concentration Site"
 rm -f  dirConSite.zip

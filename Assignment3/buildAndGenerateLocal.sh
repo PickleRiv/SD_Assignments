@@ -11,14 +11,14 @@ cp serverSide/main/ServerRegisterRemoteObject.class dirRegistry/serverSide/main
 cp serverSide/objects/RegisterRemoteObject.class dirRegistry/serverSide/objects
 cp interfaces/Register.class dirRegistry/interfaces
 
-echo "General Repository of Information"
-rm -rf dirGeneralRepos/serverSide dirGeneralRepos/clientSide dirGeneralRepos/interfaces dirGeneralRepos/commInfra
-mkdir -p dirGeneralRepos/serverSide dirGeneralRepos/serverSide/main dirGeneralRepos/serverSide/objects dirGeneralRepos/interfaces dirGeneralRepos/clientSide dirGeneralRepos/clientSide/entities dirGeneralRepos/commInfra
-cp serverSide/main/SimulPar.class serverSide/main/ServerGeneralRepos.class dirGeneralRepos/serverSide/main
-cp serverSide/objects/GeneralRepo.class dirGeneralRepos/serverSide/objects
-cp interfaces/Register.class interfaces/GeneralReposInterface.class dirGeneralRepos/interfaces
-cp clientSide/entities/MasterStates.class clientSide/entities/ThiefStates.class dirGeneralRepos/clientSide/entities
-cp commInfra/*.class dirGeneralRepos/commInfra
+#echo "General Repository of Information"
+#rm -rf dirGeneralRepos/serverSide dirGeneralRepos/clientSide dirGeneralRepos/interfaces dirGeneralRepos/commInfra
+#mkdir -p dirGeneralRepos/serverSide dirGeneralRepos/serverSide/main dirGeneralRepos/serverSide/objects dirGeneralRepos/interfaces dirGeneralRepos/clientSide dirGeneralRepos/clientSide/3entities dirGeneralRepos/commInfra
+#cp serverSide/main/SimulPar.class serverSide/main/ServerGeneralRepos.class dirGeneralRepos/serverSide/main
+#cp serverSide/objects/GeneralRepo.class dirGeneralRepos/serverSide/objects
+#cp interfaces/Register.class interfaces/GeneralReposInterface.class dirGeneralRepos/interfaces
+#cp clientSide/entities/MasterStates.class clientSide/entities/ThiefStates.class dirGeneralRepos/#clientSide/entities
+#cp commInfra/*.class dirGeneralRepos/commInfra
 
 echo "Concentration Site"
 rm -rf dirConSite/serverSide dirConSite/clientSide dirConSite/interfaces dirConSite/commInfra
@@ -130,7 +130,7 @@ mkdir -p /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Ass
 rm -rf /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3/*
 
 cp dirRegistry.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
-cp dirGeneralRepos.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
+#cp dirGeneralRepos.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
 cp dirConSite.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
 cp dirAP0.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
 cp dirAP1.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
@@ -143,7 +143,7 @@ cp genclass.zip /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignme
 cd /Users/lucas/Universidade/Uni4matricula/Semestre2/SD/SD_Assignments/Assignment3
 unzip -q dirRegistry.zip
 cp ../dirRMIRegistry/set_rmiregistry_alt.sh .
-unzip -q dirGeneralRepos.zip
+#unzip -q dirGeneralRepos.zip
 unzip -q dirConSite.zip
 unzip -q dirAP0.zip
 unzip -q dirAP1.zip
