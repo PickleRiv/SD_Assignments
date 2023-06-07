@@ -10,8 +10,8 @@ public class MasterThief extends Thread{
 	private int roomsAvailable;
 	private int busyParties;
 	private int masterId;
-	//private final CollectionSiteInterface ccSiteIntf;
-	//private final ConcentrationSiteInterface conSiteIntf;
+	private final CollectionSiteInterface ccSiteIntf;
+	private final ConcentrationSiteInterface conSiteIntf;
 	
 	
 	public void setMasterState(int masterState) { this.masterState = masterState; }	
@@ -56,7 +56,7 @@ public class MasterThief extends Thread{
 	private void startOperations(){
 		try { 
 			masterState = MasterStates.DECIDING_WHAT_TO_DO;
-			//masterState = ccSiteIntf.startOperations();	
+			ccSiteIntf.startOperations();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on startPreparation: " +e.getMessage());
@@ -67,7 +67,7 @@ public class MasterThief extends Thread{
 	private void appraiseSit(){
 		try { 
 			masterState = MasterStates.DECIDING_WHAT_TO_DO;
-			//conSiteIntf.appraiseSit();	
+			conSiteIntf.appraiseSit();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on appraiseSit: " +e.getMessage());
@@ -78,7 +78,7 @@ public class MasterThief extends Thread{
 	private void prepareAssaultParty(){
 		try { 
 			masterState = MasterStates.ASSEMBLING_A_GROUP;
-			//conSiteIntf.prepareAssaultParty();	
+			conSiteIntf.prepareAssaultParty();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on prepareAssaultParty: " +e.getMessage());
@@ -89,7 +89,7 @@ public class MasterThief extends Thread{
 	private void sendAssaultParty(){
 		try { 
 			masterState = MasterStates.DECIDING_WHAT_TO_DO;
-			//conSiteIntf.sendAssaultParty();	
+			conSiteIntf.sendAssaultParty();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on sendAssaultParty: " +e.getMessage());
@@ -100,7 +100,7 @@ public class MasterThief extends Thread{
 	private void takeARest(){
 		try { 
 			masterState = MasterStates.WAITING_FOR_ARRIVAL;
-			//ccSiteIntf.takeARest();	
+			ccSiteIntf.takeARest();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on takeARest: " +e.getMessage());
@@ -111,7 +111,7 @@ public class MasterThief extends Thread{
 	private void collectACanvas(){
 		try { 
 			masterState = MasterStates.DECIDING_WHAT_TO_DO;
-			//ccSiteIntf.collectACanvas();	
+			ccSiteIntf.collectACanvas();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on collectACanvas: " +e.getMessage());
@@ -122,7 +122,7 @@ public class MasterThief extends Thread{
 	private void sumUpResults(){
 		try { 
 			masterState = MasterStates.PRESENTING_THE_REPORT;
-			//ccSiteIntf.sumUpResults();	
+			ccSiteIntf.sumUpResults();	
 			}
 		catch (RemoteException e){
 			System.out.println("Master remote exception on sumUpResults: " +e.getMessage());

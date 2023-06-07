@@ -12,10 +12,10 @@ public class OrdinaryThief extends Thread{
 	private boolean isOver;
 	private int rooms;
 	private boolean carrying;
-	//private final CollectionSiteInterface ccSiteIntf;
-	//private final ConcentrationSiteInterface conSiteIntf;
-	//private final MuseumInterface museumIntf;
-	//private final AssaultPartyInterface apIntf;
+	private final CollectionSiteInterface ccSiteIntf;
+	private final ConcentrationSiteInterface conSiteIntf;
+	private final MuseumInterface museumIntf;
+	private final AssaultPartyInterface apIntf;
 	
 	
 	public void setThiefState(int thiefState) { this.thiefState = thiefState; }	
@@ -69,7 +69,7 @@ public class OrdinaryThief extends Thread{
 		try { 
 			thiefState = ThiefStates.CONCENTRATION_SITE;
 			needed = !needed;
-			//thiefState = ccSiteIntf.AmINeeded(boolean val);
+			ccSiteIntf.AmINeeded();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on AmINeeded: " +e.getMessage());
@@ -80,7 +80,7 @@ public class OrdinaryThief extends Thread{
 	private void prepareExcursion(){
 		try { 
 			thiefState = ThiefStates.CRAWLING_INWARDS;			
-			//thiefState = ccSiteIntf.prepareExcursion();
+			ccSiteIntf.prepareExcursion();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on prepareExcursion: " +e.getMessage());
@@ -94,7 +94,7 @@ public class OrdinaryThief extends Thread{
 				dist -= 1;
 			}
 			thiefState = ThiefStates.AT_A_ROOM;
-			//thiefState = apIntf.crawlIn();
+			apIntf.crawlIn();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on crawlIn: " +e.getMessage());
@@ -106,7 +106,7 @@ public class OrdinaryThief extends Thread{
 		try {
 			carrying = !carrying;
 			thiefState = ThiefStates.AT_A_ROOM;
-			//thiefState = museumIntf.rollACanvas();
+			museumIntf.rollACanvas();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on rollACanvas: " +e.getMessage());
@@ -117,7 +117,7 @@ public class OrdinaryThief extends Thread{
 	private void reverseDirection(){
 		try {
 			thiefState = ThiefStates.CRAWLING_OUTWARDS;
-			//thiefState = apIntf.reverseDirection();
+			apIntf.reverseDirection();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on reverseDirection: " +e.getMessage());
@@ -131,7 +131,7 @@ public class OrdinaryThief extends Thread{
 				dist += 1;
 			}
 			thiefState = ThiefStates.COLLECTION_SITE;
-			//thiefState = apIntf.crawlOut();
+			apIntf.crawlOut();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on crawlOut: " +e.getMessage());
@@ -144,7 +144,7 @@ public class OrdinaryThief extends Thread{
 			carrying = !carrying;
 			rooms -= 1;
 			thiefState = ThiefStates.CONCENTRATION_SITE;
-			//thiefState = apIntf.handACanvas();
+			apIntf.handACanvas();
 			}
 		catch (RemoteException e){
 			System.out.println("Thief_" + thiefId +"remote exception on handACanvas: " +e.getMessage());
