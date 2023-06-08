@@ -1,24 +1,24 @@
 package serverSide.main;
 
-import interfaces.MuseumInterface;
+import interfaces.AssaultPartyInterface;
 import interfaces.Register;
-import serverSide.objects.Museum;
+import serverSide.objects.AssaultParty;
 
-import java.rmi.registry.*;
-import java.rmi.*;
-import java.rmi.server.*;
-
-
+import java.rmi.AlreadyBoundException;
+import java.rmi.NoSuchObjectException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
- *    Instantiation and registering of a Museum object.
+ *    Instantiation and registering of an Assault Party object.
  *
  *    Implementation of a client-server model of type 2 (server replication).
  *    Communication is based on Java RMI.
  */
-
-public class ServerMuseum
-{
+public class ServerAssaultParty {
     /**
      *  Flag signaling the end of operations.
      */
@@ -33,7 +33,9 @@ public class ServerMuseum
      *        args[2] - port number where the registering service is listening to service requests
      */
 
-    public static void main (String[] args) throws RemoteException {
+    public static void main (String[] args)
+    {
+        int ap_id = -1;
         int portNumb = -1;                                             // port number for listening to service requests
         String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
@@ -52,6 +54,11 @@ public class ServerMuseum
         if ((portNumb < 4000) || (portNumb >= 65536))
         { System.out.println ("args[0] is not a valid port number!");
             System.exit (1);
+        }
+        if(portNumb == 22236){
+            ap_id = 0;
+        }else{
+            ap_id = 1;
         }
         rmiRegHostName = args[1];
         try
@@ -86,16 +93,16 @@ public class ServerMuseum
         System.out.println ("RMI registry was created!");
 
 
-        /* instantiate a barber shop object */
+        /* instantiate an assault party object */
 
-        Museum museum = new Museum();                 // Museum object
-        MuseumInterface museumStub = null;                          // remote reference to the Museum object
+        AssaultParty AP = new AssaultParty(ap_id);                 // barber shop object
+        AssaultPartyInterface APStub = null;                          // remote reference to the barber shop object
 
         try
-        { museumStub = (MuseumInterface) UnicastRemoteObject.exportObject (museum, portNumb);
+        { APStub = (AssaultPartyInterface) UnicastRemoteObject.exportObject (AP, portNumb);
         }
         catch (RemoteException e)
-        { System.out.println ("Museum stub generation exception: " + e.getMessage ());
+        { System.out.println ("Assault party " + ap_id + " stub generation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
@@ -104,8 +111,14 @@ public class ServerMuseum
         /* register it with the general registry service */
 
         String nameEntryBase = "RegisterHandler";                      // public name of the object that enables the registration
+        String nameEntryObject = "";                         // public name of the Assault party object
         // of other remote objects
-        String nameEntryObject = "Museum";                         // public name of the Museum object
+        if(ap_id == 0){
+            nameEntryObject = "AssaultParty0";
+        }else{
+            nameEntryObject = "AssaultParty1";
+        }
+
         Register reg = null;                                           // remote reference to the object that enables the registration
         // of other remote objects
 
@@ -124,70 +137,70 @@ public class ServerMuseum
         }
 
         try
-        { reg.bind (nameEntryObject, museumStub);
+        { reg.bind (nameEntryObject, APStub);
         }
         catch (RemoteException e)
-        { System.out.println ("Museum registration exception: " + e.getMessage ());
+        { System.out.println ("Assault party " + ap_id + " registration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (AlreadyBoundException e)
-        { System.out.println ("Museum already bound exception: " + e.getMessage ());
+        { System.out.println ("Assault party already bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        System.out.println ("Museum object was registered!");
+        System.out.println ("Assault party object was registered!");
 
         /* wait for the end of operations */
 
-        System.out.println ("Museum is in operation!");
+        System.out.println ("Assault party is in operation!");
         try
         { while (!end)
-            synchronized (Class.forName ("serverSide.main.ServerMuseum"))
+            synchronized (Class.forName ("serverSide.main.ServerAssaultParty"))
             { try
-            { (Class.forName ("serverSide.main.ServerMuseum")).wait ();
+            { (Class.forName ("serverSide.main.ServerAssaultParty")).wait ();
             }
             catch (InterruptedException e)
-            { System.out.println ("Museum main thread was interrupted!");
+            { System.out.println ("Assault party main thread was interrupted!");
             }
             }
         }
         catch (ClassNotFoundException e)
-        { System.out.println ("The data type ServerMuseum was not found (blocking)!");
+        { System.out.println ("The data type ServerAssaultParty was not found (blocking)!");
             e.printStackTrace ();
             System.exit (1);
         }
 
         /* server shutdown */
 
-        boolean shutdownDone = false;                                  // flag signalling the shutdown of the Museum service
+        boolean shutdownDone = false;                                  // flag signalling the shutdown of the barber shop service
 
         try
         { reg.unbind (nameEntryObject);
         }
         catch (RemoteException e)
-        { System.out.println ("ServerMuseum deregistration exception: " + e.getMessage ());
+        { System.out.println ("Assault party deregistration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { System.out.println ("ServerMuseum not bound exception: " + e.getMessage ());
+        { System.out.println ("Assault party not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        System.out.println ("ServerMuseum was deregistered!");
+        System.out.println ("Assault party was deregistered!");
 
         try
-        { shutdownDone = UnicastRemoteObject.unexportObject (museum, true);
+        { shutdownDone = UnicastRemoteObject.unexportObject (AP, true);
         }
         catch (NoSuchObjectException e)
-        { System.out.println ("Museum unexport exception: " + e.getMessage ());
+        { System.out.println ("Assault party unexport exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         if (shutdownDone)
-            System.out.println ("Museum was shutdown!");
+            System.out.println ("Assault party was shutdown!");
     }
 
     /**
@@ -198,12 +211,12 @@ public class ServerMuseum
     {
         end = true;
         try
-        { synchronized (Class.forName ("serverSide.main.ServerMuseum"))
-        { (Class.forName ("serverSide.main.ServerMuseum")).notify ();
+        { synchronized (Class.forName ("serverSide.main.ServerAssaultParty"))
+        { (Class.forName ("serverSide.main.ServerAssaultParty")).notify ();
         }
         }
         catch (ClassNotFoundException e)
-        { System.out.println ("The data type ServerMuseum was not found (waking up)!");
+        { System.out.println ("The data type ServerAssaultParty was not found (waking up)!");
             e.printStackTrace ();
             System.exit (1);
         }

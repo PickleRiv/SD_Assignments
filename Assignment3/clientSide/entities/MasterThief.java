@@ -9,22 +9,27 @@ public class MasterThief extends Thread{
 	private int masterState;
 	private int roomsAvailable;
 	private int busyParties;
-	private int masterId;
+	private final int masterId;
 	private final CollectionSiteInterface ccSiteIntf;
 	private final ConcentrationSiteInterface conSiteIntf;
+	private final MuseumInterface museumIntf;
+	private final AssaultPartyInterface APIntf;
 	
 	
 	public void setMasterState(int masterState) { this.masterState = masterState; }	
 	
 	public int getMasterState() { return masterState; }
 	
-	
-	public MasterThief(String name,int id) {
+	public MasterThief(String name,int id, CollectionSiteInterface ccSiteStub, ConcentrationSiteInterface conSiteIntf, AssaultPartyInterface APIntf, MuseumInterface MuseumIntf) {
 		super(name);
 		this.masterId = id;
 		this.masterState = MasterStates.PLANNING_THE_HEIST;
 		this.roomsAvailable = 8;
 		this.busyParties = 0;
+		this.ccSiteIntf = ccSiteIntf;
+		this.museumIntf = museumIntf;
+		this.APIntf = APIntf;
+		this.conSiteIntf = conSiteIntf;
 	}
 	
 	@Override

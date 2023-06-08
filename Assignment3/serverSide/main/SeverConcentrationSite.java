@@ -1,23 +1,19 @@
 package serverSide.main;
 
-import interfaces.MuseumInterface;
-import interfaces.Register;
-import serverSide.objects.Museum;
-
 import java.rmi.registry.*;
 import java.rmi.*;
 import java.rmi.server.*;
-
-
+import serverSide.objects.*;
+import interfaces.*;
 
 /**
- *    Instantiation and registering of a Museum object.
+ *    Instantiation and registering of a Concentration Site object.
  *
  *    Implementation of a client-server model of type 2 (server replication).
  *    Communication is based on Java RMI.
  */
 
-public class ServerMuseum
+public class ServerConcentrationSite
 {
     /**
      *  Flag signaling the end of operations.
@@ -33,7 +29,8 @@ public class ServerMuseum
      *        args[2] - port number where the registering service is listening to service requests
      */
 
-    public static void main (String[] args) throws RemoteException {
+    public static void main (String[] args)
+    {
         int portNumb = -1;                                             // port number for listening to service requests
         String rmiRegHostName;                                         // name of the platform where is located the RMI registering service
         int rmiRegPortNumb = -1;                                       // port number where the registering service is listening to service requests
@@ -72,7 +69,6 @@ public class ServerMuseum
             System.setSecurityManager (new SecurityManager ());
         System.out.println ("Security manager was installed!");
 
-
         Registry registry = null;                                      // remote reference for registration in the RMI registry service
 
         try
@@ -85,17 +81,14 @@ public class ServerMuseum
         }
         System.out.println ("RMI registry was created!");
 
-
-        /* instantiate a barber shop object */
-
-        Museum museum = new Museum();                 // Museum object
-        MuseumInterface museumStub = null;                          // remote reference to the Museum object
+        ConcentrationSite conSite = new ConcentrationSite();                 // Concentration site object
+        ConcentrationSiteInterface CSstub = null;                          // remote reference to the Concentration site object
 
         try
-        { museumStub = (MuseumInterface) UnicastRemoteObject.exportObject (museum, portNumb);
+        { CSstub = (ConcentrationSiteInterface) UnicastRemoteObject.exportObject (conSite, portNumb);
         }
         catch (RemoteException e)
-        { System.out.println ("Museum stub generation exception: " + e.getMessage ());
+        { System.out.println ("Master thief control and collection site stub generation exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
@@ -105,7 +98,7 @@ public class ServerMuseum
 
         String nameEntryBase = "RegisterHandler";                      // public name of the object that enables the registration
         // of other remote objects
-        String nameEntryObject = "Museum";                         // public name of the Museum object
+        String nameEntryObject = "ConcentrationSite";                         // public name of the CS object
         Register reg = null;                                           // remote reference to the object that enables the registration
         // of other remote objects
 
@@ -124,70 +117,70 @@ public class ServerMuseum
         }
 
         try
-        { reg.bind (nameEntryObject, museumStub);
+        { reg.bind (nameEntryObject, CSstub);
         }
         catch (RemoteException e)
-        { System.out.println ("Museum registration exception: " + e.getMessage ());
+        { System.out.println ("CS registration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (AlreadyBoundException e)
-        { System.out.println ("Museum already bound exception: " + e.getMessage ());
+        { System.out.println ("CS already bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        System.out.println ("Museum object was registered!");
+        System.out.println ("CS object was registered!");
 
         /* wait for the end of operations */
 
-        System.out.println ("Museum is in operation!");
+        System.out.println ("CS is in operation!");
         try
         { while (!end)
-            synchronized (Class.forName ("serverSide.main.ServerMuseum"))
+            synchronized (Class.forName ("serverSide.main.ServerConcentrationSite"))
             { try
-            { (Class.forName ("serverSide.main.ServerMuseum")).wait ();
+            { (Class.forName ("serverSide.main.ServerConcentrationSite")).wait ();
             }
             catch (InterruptedException e)
-            { System.out.println ("Museum main thread was interrupted!");
+            { System.out.println ("CS main thread was interrupted!");
             }
             }
         }
         catch (ClassNotFoundException e)
-        { System.out.println ("The data type ServerMuseum was not found (blocking)!");
+        { System.out.println ("The data type ServerConcentrationSite was not found (blocking)!");
             e.printStackTrace ();
             System.exit (1);
         }
 
         /* server shutdown */
 
-        boolean shutdownDone = false;                                  // flag signalling the shutdown of the Museum service
+        boolean shutdownDone = false;                                  // flag signalling the shutdown of the CS service
 
         try
         { reg.unbind (nameEntryObject);
         }
         catch (RemoteException e)
-        { System.out.println ("ServerMuseum deregistration exception: " + e.getMessage ());
+        { System.out.println ("CS deregistration exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
         catch (NotBoundException e)
-        { System.out.println ("ServerMuseum not bound exception: " + e.getMessage ());
+        { System.out.println ("CS not bound exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
-        System.out.println ("ServerMuseum was deregistered!");
+        System.out.println ("CS was deregistered!");
 
         try
-        { shutdownDone = UnicastRemoteObject.unexportObject (museum, true);
+        { shutdownDone = UnicastRemoteObject.unexportObject (conSite, true);
         }
         catch (NoSuchObjectException e)
-        { System.out.println ("Museum unexport exception: " + e.getMessage ());
+        { System.out.println ("CS unexport exception: " + e.getMessage ());
             e.printStackTrace ();
             System.exit (1);
         }
 
         if (shutdownDone)
-            System.out.println ("Museum was shutdown!");
+            System.out.println ("Concentration Site was shutdown!");
     }
 
     /**
@@ -198,12 +191,12 @@ public class ServerMuseum
     {
         end = true;
         try
-        { synchronized (Class.forName ("serverSide.main.ServerMuseum"))
-        { (Class.forName ("serverSide.main.ServerMuseum")).notify ();
+        { synchronized (Class.forName ("serverSide.main.ServerConcentrationSite"))
+        { (Class.forName ("serverSide.main.ServerConcentrationSite")).notify ();
         }
         }
         catch (ClassNotFoundException e)
-        { System.out.println ("The data type ServerMuseum was not found (waking up)!");
+        { System.out.println ("The data type ServerConcentrationSite was not found (waking up)!");
             e.printStackTrace ();
             System.exit (1);
         }
