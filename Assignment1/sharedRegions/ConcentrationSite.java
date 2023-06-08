@@ -11,8 +11,8 @@ public class ConcentrationSite {
 	private int[] party1;
 	private int[] party2;
 	private int[] partyTask;
-	private int[] emptyRooms;
-	private int[] roomDists;
+	private int currParty;
+	private int[] rooms;
 	private boolean isOver;
 
 	
@@ -20,9 +20,9 @@ public class ConcentrationSite {
 		this.thieves = new int[6];
 		this.party1 = new int[3];
 		this.party2 = new int[3];
+		this.currParty = -1;
 		this.partyTask = new int[2];
-		this.emptyRooms = new int[5];
-		this.roomDists = new int[5];
+		this.rooms = new int[5];
 
 		isOver = false;
 		thiefCnt = 0;
@@ -37,8 +37,7 @@ public class ConcentrationSite {
 			partyTask[i] = -1;
 		}
 		for(int i = 0; i < 5; i++) {
-			emptyRooms[i] = 0;
-			roomDists[i] = (int) (Math.random() * (30 - 15 + 1) + 15);
+			rooms[i] = 0;
 		}
 	}
 	
@@ -53,12 +52,12 @@ public class ConcentrationSite {
 		}
 		isOver = isOver();
 		if(!isOver) {
-			if (getEmptyParty()==0){
+			currParty = getEmptyParty();
+			if (currParty == 0){
 				for(int i = 0; i < 3; i++) {
 					party1[i] = getThiefId();
-					System.out.println(party1[i]);
 				}
-			} else if(getEmptyParty()==1){
+			} else if(currParty == 1){
 				for(int i = 0; i < 3; i++) {
 					party2[i] = getThiefId();
 				}
@@ -68,7 +67,12 @@ public class ConcentrationSite {
 	}
 
 	public synchronized void prepareAssaultParty(){
-
+		int room = getRoom();
+		if (room != -1) {
+			partyTask[currParty] = room;
+			rooms[room] = 1;
+		}
+		System.out.println("Sending party_"+ currParty + " to room_"+room);
 	}
 	
 	public synchronized void sendAssaultParty(){
@@ -76,7 +80,7 @@ public class ConcentrationSite {
 	}
 	
 	// Ordinary thieves activities
-	public synchronized void AmINeeded(int thiefId){
+	public synchronized boolean AmINeeded(int thiefId){
 		thiefCnt++;
 		thieves[thiefId] = thiefId;
 		
@@ -91,23 +95,25 @@ public class ConcentrationSite {
 
 		thiefCnt--;
 		thieves[thiefId] = -1;
+		return isOver;
 	}
 	
-	public synchronized void prepareExcursion(){
-//		while (true) {
-//            try {
-//                wait();
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//		}
+	public synchronized int prepareExcursion(int thiefId){
+		while (partyTask[currParty] == -1) {
+            try {
+                wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+		}
+		return getPartyId(thiefId);
 	}
 	
 	// Assisting functions
 	public synchronized boolean isOver() {
 		int num = 0;
 		for(int i = 0; i<5;i++) {
-			if(emptyRooms[i]==1) {
+			if(rooms[i]==2) {
 				num++;
 			}
 		}
@@ -117,14 +123,29 @@ public class ConcentrationSite {
 		return false;
 	}
 	
+	public synchronized int getRoomId(int partyId){
+		return partyTask[partyId];
+	}
+	
 	public synchronized boolean inParty(int thiefId){
 		for(int i = 0; i < 3; i++) {if (party1[i] == thiefId || party2[i] == thiefId) {return true;}}
 		return false;
+	}
+	
+	public synchronized int getPartyId(int thiefId){
+		for(int i = 0; i < 3; i++) {if (party1[i] == thiefId) {return 0;}}
+		for(int i = 0; i < 3; i++) {if (party2[i] == thiefId) {return 1;}}
+		return -1;
 	}
 
 	public synchronized int getEmptyParty(){
 		for(int i = 0; i < 3; i++) {if (party1[i] == -1) {return 0;}}
 		for(int i = 0; i < 3; i++) {if (party2[i] == -1) {return 1;}}
+		return -1;
+	}
+	
+	public synchronized int getRoom(){
+		for(int i = 0; i < 5; i++) {if (rooms[i] == 0) {return i;}}
 		return -1;
 	}
 	

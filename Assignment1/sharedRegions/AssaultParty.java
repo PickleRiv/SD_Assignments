@@ -10,7 +10,7 @@ public AssaultParty() {
 		
 	}
 
-	public synchronized void crawlIn(){	
+	public synchronized void crawlIn(int dist){	
 	}
 	
 	public synchronized void reverseDirection(){ 		

@@ -39,6 +39,7 @@ public class MasterThief extends Thread {
 				roomsAvailable -= 1;
 				busyParties += 1;
 				sendAssaultParty();
+				System.out.println("hello");				
 			}
 			if (busyParties == 2 || (roomsAvailable ==0 && busyParties > 0)) {
 				takeARest();
