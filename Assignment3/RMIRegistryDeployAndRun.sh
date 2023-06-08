@@ -12,4 +12,4 @@ echo "Decompressing data sent to the RMI Registry node."
 sshpass -f password ssh sd402@l040101-ws01.ua.pt 'cd test/MuseumHeist ; unzip -uq dirRMIRegistry.zip'
 sshpass -f password ssh sd402@l040101-ws01.ua.pt 'cd test/MuseumHeist/dirRMIRegistry ; cp clientSide/entities/*.class /home/sd402/Public/classes/clientSide/entities; cp interfaces/*.class /home/sd402/Public/classes/interfaces; cp commInfra/*.class /home/sd402/Public/classes/commInfra ; cp set_rmiregistry_d.sh /home/sd402'
 echo "Executing program at the RMI Registry node."
-sshpass -f password ssh sd402@l040101-ws01.ua.pt './set_rmiregistry_d.sh sd402 22230'
+sshpass -f password ssh sd402@l040101-ws01.ua.pt './set_rmiregistry_d.sh sd402 22410'

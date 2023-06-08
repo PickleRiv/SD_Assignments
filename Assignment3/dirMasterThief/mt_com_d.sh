@@ -1,1 +1,1 @@
-java clientSide.main.ClientMaster l040101-ws01.ua.pt 22230
+java clientSide.main.ClientMaster l040101-ws01.ua.pt 22410
