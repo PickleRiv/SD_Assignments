@@ -1,5 +1,5 @@
-xterm  -T "General Repository" -hold -e "./GeneralReposDeployAndRun.sh" &
-sleep 10
+#xterm  -T "General Repository" -hold -e "./GeneralReposDeployAndRun.sh" &
+#sleep 10
 xterm  -T "Thiefs Concentration Site" -hold -e "./ConSite_DeployAndRun.sh" &
 xterm  -T "Assault Party 0" -hold -e "./AP0_DeployAndRun.sh" &
 xterm  -T "Assault Party 1" -hold -e "./AP1_DeployAndRun.sh" &

@@ -89,9 +89,9 @@ echo "Register Remote Objects"
 rm -f  dirRegistry.zip
 zip -rq dirRegistry.zip dirRegistry
 
-echo "General Repository of Information"
-rm -f  dirGeneralRepos.zip
-zip -rq dirGeneralRepos.zip dirGeneralRepos
+#echo "General Repository of Information"
+#rm -f  dirGeneralRepos.zip
+#zip -rq dirGeneralRepos.zip dirGeneralRepos
 
 echo "Concentration Site"
 rm -f  dirConSite.zip
