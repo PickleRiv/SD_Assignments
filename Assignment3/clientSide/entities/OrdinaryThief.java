@@ -151,4 +151,65 @@ public class OrdinaryThief extends Thread{
 			System.exit(1);
 		}    		
 	}
+	
+//	@Override
+//	public void run (){
+//		while(true) {
+//			
+//			System.out.println("AmINeeded?");
+//			AmINeeded();
+//			if (isOver) {
+//				break;
+//			}
+//			System.out.println("prepareExcursion?");
+//			prepareExcursion();
+//			System.out.println("crawlIn?");
+//			crawlIn();
+//			System.out.println("rollACanvas?");
+//			rollACanvas();
+//			System.out.println("reverseDirection?");
+//			reverseDirection();
+//			System.out.println("crawlOut?");
+//			crawlOut();
+//			System.out.println("handACanvas?");
+//			handACanvas();
+//			System.out.println("finished?");
+//		}
+//		
+//	}
+//		
+//	private void AmINeeded(){
+//		isOver = conSite.AmINeeded(thiefId);
+//	}
+//	
+//	private void prepareExcursion(){
+//		partyId = conSite.prepareExcursion(thiefId);
+//		roomId = conSite.getRoomId(partyId);
+//		thiefState = ThiefStates.CRAWLING_INWARDS;			
+//	}
+//	
+//	private void rollACanvas(){
+//		carrying = museum.rollACanvas(roomId);
+//	}
+//	
+//	private void reverseDirection(){
+//		museum.reverseDirection();
+//		thiefState = ThiefStates.CRAWLING_OUTWARDS;
+//	}
+//	
+//	private void crawlIn(){
+//		aParty[partyId].crawlIn(museum.getRoomDistance(roomId));
+//		thiefState = ThiefStates.AT_A_ROOM;
+//	}
+//	
+//	private void crawlOut(){
+//		aParty[partyId].crawlOut();
+//		thiefState = ThiefStates.COLLECTION_SITE;
+//	}
+//	
+//	private void handACanvas(){
+//		ccSite.handACanvas(carrying);
+//		carrying = false;
+//		thiefState = ThiefStates.CONCENTRATION_SITE;
+//	}
 }

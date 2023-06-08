@@ -57,7 +57,6 @@ public class MasterThief extends Thread{
 		System.out.println(masterState);
 	}
 	
-	
 	private void startOperations(){
 		try { 
 			masterState = MasterStates.DECIDING_WHAT_TO_DO;
@@ -133,5 +132,66 @@ public class MasterThief extends Thread{
 			System.out.println("Master remote exception on sumUpResults: " +e.getMessage());
 			System.exit(1);
 		}
-	}	
+	}
+	
+//	@Override
+//	public void run (){
+//		startOperations();
+//		while(true) {
+//			System.out.println("Appraise");
+//			appraiseSit();
+//			if(isOver) {
+//				break;
+//			}
+//			if (busyParties<2) {
+//				System.out.println("prep");
+//				prepareAssaultParty();
+//				System.out.println("send");
+//				sendAssaultParty();
+//			}
+//			if (busyParties == 2 || (lastRoom && busyParties > 0)) {
+//				System.out.println("rest");
+//				takeARest();
+//				System.out.println("canvas");
+//				collectACanvas();
+//			}
+//		}
+//		sumUpResults();
+//	}
+//	
+//	private void startOperations(){
+//			masterState = MasterStates.DECIDING_WHAT_TO_DO;
+//	}
+//	
+//	private void appraiseSit(){
+//			masterState = MasterStates.DECIDING_WHAT_TO_DO;
+//			conSite.appraiseSit();
+//	}
+//	
+//	private void prepareAssaultParty(){
+//			masterState = MasterStates.ASSEMBLING_A_GROUP;
+//			lastRoom = conSite.prepareAssaultParty();
+//	}
+//	
+//	private void sendAssaultParty(){
+//			masterState = MasterStates.DECIDING_WHAT_TO_DO;
+//			conSite.sendAssaultParty();
+//			busyParties += 1;
+//	}
+//	
+//	private void takeARest(){
+//			masterState = MasterStates.WAITING_FOR_ARRIVAL;
+//			ccSite.takeARest();
+//	}
+//	
+//	private void collectACanvas(){
+//			masterState = MasterStates.DECIDING_WHAT_TO_DO;
+//			ccSite.collectACanvas();
+//			busyParties -= 1;
+//	}
+//	
+//	private void sumUpResults(){
+//			masterState = MasterStates.PRESENTING_THE_REPORT;
+//			ccSite.sumUpResults();	
+//	}
 }
